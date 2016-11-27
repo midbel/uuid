@@ -1,3 +1,5 @@
+//Package uuid provides a basic implementation of Universal Unique Identifier as
+//described in RFC 4122.
 package uuid
 
 import (
@@ -16,6 +18,8 @@ import (
 const variant = 0x40
 
 const devRandom = "/dev/urandom"
+
+const pattern = "%08x-%04x-%04x-%02x%02x-%x"
 
 var (
 	timeMU sync.Mutex
@@ -62,7 +66,6 @@ func (u UUID) Version() int {
 }
 
 func (u UUID) String() string {
-	const pattern = "%08x-%04x-%04x-%02x%02x-%x"
 	return fmt.Sprintf(pattern, u.TimeLow, u.TimeMid, u.TimeHigh, u.ClockHigh, u.ClockLow, u.Node)
 }
 
