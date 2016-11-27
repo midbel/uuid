@@ -33,6 +33,7 @@ var (
 	DN  = &UUID{0x6ba7b814, 0x9dad, 0x11d1, 0x80, 0xb4, []byte{0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8}}
 )
 
+//UUID represents an unique identified with its different parts.
 type UUID struct {
 	TimeLow   uint32
 	TimeMid   uint16
