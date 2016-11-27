@@ -98,6 +98,7 @@ func Make(chunk []byte) (*UUID, error) {
 	return u, nil
 }
 
+//UUID1 create an unique identifier version 1.
 func UUID1() (*UUID, error) {
 	timeMU.Lock()
 	defer timeMU.Unlock()
@@ -137,6 +138,8 @@ func UUID1() (*UUID, error) {
 	return u, nil
 }
 
+//UUID1 create an unique identifier version 3 (MD5 of name is used for the different
+//part of the UUID) from name and ns.
 func UUID3(ns *UUID, name []byte) (*UUID, error) {
 	data := append(ns.Bytes(), name...)
 
@@ -146,6 +149,7 @@ func UUID3(ns *UUID, name []byte) (*UUID, error) {
 	return read(buf, 0x3000)
 }
 
+//UUID1 create an unique identifier version 4. 
 func UUID4() (*UUID, error) {
 	randMU.Lock()
 	defer randMU.Unlock()
@@ -158,6 +162,8 @@ func UUID4() (*UUID, error) {
 	return read(f, 0x4000)
 }
 
+//UUID1 create an unique identifier version 3 (SHA1 of name is used for the different
+//part of the UUID) from name and ns.
 func UUID5(ns *UUID, name []byte) (*UUID, error) {
 	data := append(ns.Bytes(), name...)
 
