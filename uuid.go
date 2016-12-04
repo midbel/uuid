@@ -150,7 +150,7 @@ func UUID3(ns *UUID, name []byte) (*UUID, error) {
 	return read(buf, 0x3000)
 }
 
-//UUID1 create an unique identifier version 4. 
+//UUID1 create an unique identifier version 4.
 func UUID4() (*UUID, error) {
 	randMU.Lock()
 	defer randMU.Unlock()
