@@ -5,19 +5,17 @@ package uuid
 import (
 	"bytes"
 	"crypto/md5"
+	"crypto/rand"
 	"crypto/sha1"
 	"encoding/binary"
 	"fmt"
 	"io"
 	"net"
-	"os"
 	"sync"
 	"time"
 )
 
 const variant = 0x40
-
-const devRandom = "/dev/urandom"
 
 const pattern = "%08x-%04x-%04x-%02x%02x-%x"
 
@@ -106,13 +104,7 @@ func UUID1() (*UUID, error) {
 
 	const fraction = 100
 	buf := make([]byte, 2)
-
-	f, err := os.Open(devRandom)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	f.Read(buf)
+	rand.Read(buf)
 
 	//epoch := time.Date(1582, 10, 15, 0, 0, 0, 0, time.Local)
 	delta := time.Now().UnixNano()
@@ -155,12 +147,7 @@ func UUID4() (*UUID, error) {
 	randMU.Lock()
 	defer randMU.Unlock()
 
-	f, err := os.Open(devRandom)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	return read(f, 0x4000)
+	return read(rand.Reader, 0x4000)
 }
 
 //UUID1 create an unique identifier version 3 (SHA1 of name is used for the different
