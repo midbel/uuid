@@ -42,12 +42,12 @@ type UUID struct {
 }
 
 func (u UUID) Bytes() []byte {
-	buf := bytes.NewBuffer(nil)
-	binary.Write(buf, binary.BigEndian, u.TimeLow)
-	binary.Write(buf, binary.BigEndian, u.TimeMid)
-	binary.Write(buf, binary.BigEndian, u.TimeHigh)
-	binary.Write(buf, binary.BigEndian, u.ClockHigh)
-	binary.Write(buf, binary.BigEndian, u.ClockLow)
+	var buf bytes.Buffer
+	binary.Write(&buf, binary.BigEndian, u.TimeLow)
+	binary.Write(&buf, binary.BigEndian, u.TimeMid)
+	binary.Write(&buf, binary.BigEndian, u.TimeHigh)
+	binary.Write(&buf, binary.BigEndian, u.ClockHigh)
+	binary.Write(&buf, binary.BigEndian, u.ClockLow)
 
 	buf.Write(u.Node)
 
@@ -55,8 +55,7 @@ func (u UUID) Bytes() []byte {
 }
 
 func (u UUID) IsNil() bool {
-	v := u.TimeLow == 0 && u.TimeMid == 0 && u.TimeHigh == 0 && u.ClockHigh == 0 && u.ClockLow == 0
-	return v
+	return u.TimeLow == 0 && u.TimeMid == 0 && u.TimeHigh == 0 && u.ClockHigh == 0 && u.ClockLow == 0
 }
 
 func (u UUID) Version() int {
@@ -70,31 +69,6 @@ func (u UUID) String() string {
 
 func Nil() (*UUID, error) {
 	return &UUID{Node: make([]byte, 6)}, nil
-}
-
-func Make(chunk []byte) (*UUID, error) {
-	u := new(UUID)
-	in := bytes.NewReader(chunk)
-	if err := binary.Read(in, binary.BigEndian, &u.TimeLow); err != nil {
-		return nil, err
-	}
-	if err := binary.Read(in, binary.BigEndian, &u.TimeMid); err != nil {
-		return nil, err
-	}
-	if err := binary.Read(in, binary.BigEndian, &u.TimeHigh); err != nil {
-		return nil, err
-	}
-	if err := binary.Read(in, binary.BigEndian, &u.ClockHigh); err != nil {
-		return nil, err
-	}
-	if err := binary.Read(in, binary.BigEndian, &u.ClockLow); err != nil {
-		return nil, err
-	}
-	u.Node = make([]byte, 6)
-	if _, err := in.Read(u.Node); err != nil {
-		return nil, err
-	}
-	return u, nil
 }
 
 //UUID1 create an unique identifier version 1.
@@ -122,9 +96,9 @@ func UUID1() (*UUID, error) {
 	if err != nil || len(is) == 0 {
 		return nil, err
 	}
-	for _, ifi := range is {
-		if ifi.Name != "lo" {
-			u.Node = []byte(ifi.HardwareAddr)
+	for _, i := range is {
+		if ok := (i.Flags & net.FlagLoopback) != net.FlagLoopback; ok {
+			u.Node = []byte(i.HardwareAddr)
 			break
 		}
 	}
