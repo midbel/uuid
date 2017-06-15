@@ -71,7 +71,7 @@ func Nil() (*UUID, error) {
 	return &UUID{Node: make([]byte, 6)}, nil
 }
 
-//UUID1 create UUID version 1.
+//UUID1 create an UUID version 1.
 func UUID1() (*UUID, error) {
 	timeMU.Lock()
 	defer timeMU.Unlock()
@@ -105,7 +105,7 @@ func UUID1() (*UUID, error) {
 	return u, nil
 }
 
-//UUID3 create a UUID version 3 from name and ns.
+//UUID3 create an UUID version 3 from name and ns.
 func UUID3(ns *UUID, name []byte) (*UUID, error) {
 	data := append(ns.Bytes(), name...)
 
