@@ -15,6 +15,8 @@ import (
 	"time"
 )
 
+const Size = 16
+
 const variant = 0x40
 
 const pattern = "%08x-%04x-%04x-%02x%02x-%x"
