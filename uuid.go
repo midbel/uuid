@@ -30,22 +30,16 @@ var Nil = UUID(make([]byte, Size))
 type UUID []byte
 
 func (u UUID) String() string {
-	xs := []byte(u)
-
 	var (
-		tlow  = xs[:4]
-		tmid  = xs[4:6]
-		thigh = xs[6:8]
-		chigh = xs[8]
-		clow  = xs[9]
-		node  = xs[10:]
+		uid   = []byte(u)
+		tlow  = uid[:4]
+		tmid  = uid[4:6]
+		thigh = uid[6:8]
+		chigh = uid[8]
+		clow  = uid[9]
+		node  = uid[10:]
 	)
-
 	return fmt.Sprintf(pattern, tlow, tmid, thigh, chigh, clow, node)
-}
-
-func (u UUID) Version() int {
-	return int(u[6]) >> 4
 }
 
 // func UUID1() UUID {
